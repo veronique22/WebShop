@@ -1,1 +1,22 @@
-﻿
+﻿Nous créons un folder models qui va contenir toutes nos classes
+nous y ajoutons une classe product avec ses propriétés
+
+Astuce pour définir l'ID, 
+pour lui  donner un valeur, la meilleure place est dans le constructeur 
+il va generé à chaque fois qu'il est tourné une nouvelle valeur. 
+        
+		
+		public Product()
+        {
+            this.Id = Guid.NewGuid().ToString();
+        }
+
+- rajouter les validations avec les décorations de dataAnnotation
+
+
+- aller ensuite dans la librairie dataaccesInmemory afin de creer un repository
+ajouter une classe productRepository
+cliquer sur ajouter reference du projet dataaccesInmemory et
+ajouter la reference à webshop.core, mais également à Systeme.runtime.caching
+
+ensuite completer le code de notre classe avec un constructeur et les methodes de Crud
