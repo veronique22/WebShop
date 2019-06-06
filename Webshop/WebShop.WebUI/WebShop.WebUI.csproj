@@ -193,6 +193,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ProductManagerController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -294,6 +295,8 @@
     <Content Include="Scripts\popper.js.map" />
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
+    <Content Include="Views\ProductManager\Index.cshtml" />
+    <Content Include="Views\ProductManager\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -308,6 +311,24 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\webShop.core\webShop.core.csproj">
+      <Project>{459b41b6-0b61-40e5-83ae-bd6c986e62eb}</Project>
+      <Name>webShop.core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebShop.DataAcces.InMemory\WebShop.DataAcces.InMemory.csproj">
+      <Project>{947031de-987a-4e01-acf7-f1373473de24}</Project>
+      <Name>WebShop.DataAcces.InMemory</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebShop.DataAccess.SQL\WebShop.DataAccess.SQL.csproj">
+      <Project>{69efb582-367b-4b60-9fbe-12af06a0c22c}</Project>
+      <Name>WebShop.DataAccess.SQL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebShop.Services\WebShop.Services.csproj">
+      <Project>{05942a65-0ca4-44bf-8515-0edba6640bf4}</Project>
+      <Name>WebShop.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
