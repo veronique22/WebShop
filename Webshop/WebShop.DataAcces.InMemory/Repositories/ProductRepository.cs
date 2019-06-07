@@ -35,14 +35,15 @@ namespace WebShop.DataAcces.InMemory.Repositories
 
             if (productsToUpdate != null)
             {
-                productsToUpdate = product;
+                int index = products.FindIndex(p => p.Id == productsToUpdate.Id);
+                products[index]  = product;
             }
             else
             {
                 throw new Exception("product not found");
             }
         }
-
+        
         public Product FindProduct(string Id)
         {
             Product productsToFind = products.Find(p => p.Id == Id);
