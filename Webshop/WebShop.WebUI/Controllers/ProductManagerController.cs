@@ -49,7 +49,7 @@ namespace WebShop.WebUI.Controllers
             var productToDelete = context.FindProduct(Id);
             return View(productToDelete);
         }
-        [HttpPost]
+        [HttpDelete]
         [ActionName("Delete")]
         public ActionResult ConfirmDelete(string Id)
         {
@@ -63,6 +63,23 @@ namespace WebShop.WebUI.Controllers
                 return RedirectToAction("Index");
             }
             
+        }
+        [HttpGet]
+        public ActionResult Edit(string ID)
+        {
+            var productToUpdate = context.FindProduct(ID);
+            return View(productToUpdate);
+        }
+        [HttpPost]
+        [ActionName("Edit")]
+
+        public ActionResult Editnew(Product product)
+        {
+            context.Update(product);
+            //context.Delete(product.Id);
+            //context.Insert(product);
+            context.Commit();
+            return RedirectToAction("Index"); ;
         }
     }
 }
