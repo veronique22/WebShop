@@ -43,7 +43,7 @@ namespace WebShop.DataAcces.InMemory.Repositories
             }
         }
 
-        public Product Find(string Id)
+        public Product FindProduct(string Id)
         {
             Product productsToFind = products.Find(p => p.Id == Id);
             if (productsToFind != null)
@@ -61,10 +61,12 @@ namespace WebShop.DataAcces.InMemory.Repositories
         {
             return products.AsQueryable();
         }
-        public void Delete(string Id)
+        public bool Delete(string Id)
         {
-            var productToDelete = Find(Id);
+            var productToDelete = FindProduct(Id);
             products.Remove(productToDelete);
+
+            return true;
         }
     }
 }

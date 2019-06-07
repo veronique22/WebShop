@@ -297,6 +297,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\ProductManager\Index.cshtml" />
     <Content Include="Views\ProductManager\Create.cshtml" />
+    <Content Include="Views\ProductManager\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

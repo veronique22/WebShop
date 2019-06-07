@@ -43,5 +43,26 @@ namespace WebShop.WebUI.Controllers
             return RedirectToAction("Index");
 
         }
+        [HttpGet]
+        public ActionResult Delete(string Id)
+        {
+            var productToDelete = context.FindProduct(Id);
+            return View(productToDelete);
+        }
+        [HttpPost]
+        [ActionName("Delete")]
+        public ActionResult ConfirmDelete(string Id)
+        {
+            var productToDelete = context.Delete(Id);
+            if (productToDelete == false)
+            {
+                return HttpNotFound();
+            }
+            else
+            {
+                return RedirectToAction("Index");
+            }
+            
+        }
     }
 }
