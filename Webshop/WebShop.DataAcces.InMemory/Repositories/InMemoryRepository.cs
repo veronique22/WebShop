@@ -5,10 +5,11 @@ using System.Runtime.Caching;
 using System.Text;
 using System.Threading.Tasks;
 using webShop.core.Models;
+using WebShop.core.Interface;
 
 namespace WebShop.DataAcces.InMemory.Repositories
 {
-   public class InMemoryRepository <T> where T: BaseEntities
+   public class InMemoryRepository <T> : core.Interface.IRepository<T> where T: BaseEntities
     {
         ObjectCache cache = MemoryCache.Default;
         List<T> Items;
@@ -46,7 +47,7 @@ namespace WebShop.DataAcces.InMemory.Repositories
                 throw new Exception(ClassName + "not found");
             }
         }
-        public T FindProduct (string Id)
+        public T FindById (string Id)
         {
             T tToFind = Items.Find(p => p.Id == Id);
             if (tToFind != null)
@@ -65,10 +66,9 @@ namespace WebShop.DataAcces.InMemory.Repositories
         }
         public bool Delete(string Id)
         {
-            var tToDelete = FindProduct(Id);
-            Items.Remove(tToDelete);
+            var tToDelete = FindById(Id);
+            return Items.Remove(tToDelete);
 
-            return true;
         }
     }
 }

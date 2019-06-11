@@ -4,17 +4,18 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using webShop.core.Models;
+using WebShop.core.Interface;
 using WebShop.DataAcces.InMemory.Repositories;
 
 namespace WebShop.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        public ProductCategoryManagerController()
+        IRepository<ProductCategory> context;
+        public ProductCategoryManagerController(IRepository<ProductCategory>CategoryContext)
         {
-            context = new CategoryRepository();
+            context = CategoryContext;
         }
-        CategoryRepository context;
         public ActionResult Index()
         {
             List<ProductCategory> categories = context.GetCategory().ToList();
@@ -45,7 +46,7 @@ namespace WebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Delete(string Id)
         {
-            var CategorieToDelete = context.FindCategory(Id);
+            var CategorieToDelete = context.FindById(Id);
             return View(CategorieToDelete);
         }
         [HttpDelete]
@@ -66,7 +67,7 @@ namespace WebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Edit(string ID)
         {
-            var CategorieToUpdate = context.FindCategory(ID);
+            var CategorieToUpdate = context.FindById(ID);
             return View(CategorieToUpdate);
         }
         [HttpPost]

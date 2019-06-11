@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using webShop.core.Models;
 using webShop.core.ViewsModels;
+using WebShop.core.Interface;
 using WebShop.DataAcces.InMemory.Repositories;
 
 namespace WebShop.WebUI.Controllers
@@ -12,18 +13,19 @@ namespace WebShop.WebUI.Controllers
     public class ProductManagerController : Controller
     {
         // GET: ProductManager
-        public ProductManagerController()
-        {
-            context = new ProductRepository();
-            productCategoryContext = new CategoryRepository();
-        }
-        ProductRepository context;
-        CategoryRepository productCategoryContext;
+        IRepository<Product> context;
+        IRepository<ProductCategory> productCategoryContext;
         ProductManagerViewModel viewModel = new ProductManagerViewModel();
+
+        public ProductManagerController(IRepository<Product> ProductContext, IRepository<ProductCategory>CategoryContext)
+        {
+            context = ProductContext;
+            productCategoryContext = CategoryContext;
+        }
 
         public ActionResult Index()
         {
-            List<Product> products = context.GetProducts().ToList();
+            List<Product> products = context.GetCategory().ToList();
 
             return View(products);
         }
@@ -52,7 +54,7 @@ namespace WebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Delete(string Id)
         {
-            var productToDelete = context.FindProduct(Id);
+            var productToDelete = context.FindById(Id);
             return View(productToDelete);
         }
         [HttpDelete]
@@ -73,7 +75,7 @@ namespace WebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Edit(string Id)
         {
-            var productToUpdate = context.FindProduct(Id);
+            var productToUpdate = context.FindById(Id);
             if (productToUpdate == null)
             {
                 return HttpNotFound();
