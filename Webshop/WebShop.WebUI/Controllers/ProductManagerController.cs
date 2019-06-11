@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using webShop.core.Models;
+using webShop.core.ViewsModels;
 using WebShop.DataAcces.InMemory.Repositories;
 
 namespace WebShop.WebUI.Controllers
@@ -14,8 +15,12 @@ namespace WebShop.WebUI.Controllers
         public ProductManagerController()
         {
             context = new ProductRepository();
+            productCategoryContext = new CategoryRepository();
         }
         ProductRepository context;
+        CategoryRepository productCategoryContext;
+        ProductManagerViewModel viewModel = new ProductManagerViewModel();
+
         public ActionResult Index()
         {
             List<Product> products = context.GetProducts().ToList();
@@ -25,8 +30,9 @@ namespace WebShop.WebUI.Controllers
         [HttpGet]
         public ActionResult Create()
         {
-            Product product = new Product();
-            return View(product);
+            viewModel.Product = new Product();
+            viewModel.ProductCategories = productCategoryContext.GetCategory();
+            return View(viewModel);
         }
         [HttpPost]
         public ActionResult Create(Product product)
@@ -65,10 +71,16 @@ namespace WebShop.WebUI.Controllers
             
         }
         [HttpGet]
-        public ActionResult Edit(string ID)
+        public ActionResult Edit(string Id)
         {
-            var productToUpdate = context.FindProduct(ID);
-            return View(productToUpdate);
+            var productToUpdate = context.FindProduct(Id);
+            if (productToUpdate == null)
+            {
+                return HttpNotFound();
+            }
+            viewModel.Product = productToUpdate;
+            viewModel.ProductCategories = productCategoryContext.GetCategory();
+            return View(viewModel);
         }
         [HttpPost]
         [ActionName("Edit")]

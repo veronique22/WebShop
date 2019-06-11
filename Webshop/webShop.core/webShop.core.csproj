@@ -45,9 +45,11 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductCategory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewsModels\ProductManagerViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NotesWebshop.core.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
