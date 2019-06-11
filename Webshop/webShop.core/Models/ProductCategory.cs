@@ -6,13 +6,10 @@ using System.Threading.Tasks;
 
 namespace webShop.core.Models
 {
-    public class ProductCategory
+    public class ProductCategory : BaseEntities
     {
-        public string Id { get; set; }
+        
         public string Category { get; set; }
-        public ProductCategory()
-        {
-            this.Id = Guid.NewGuid().ToString();
-        }
+       
     }
 }
