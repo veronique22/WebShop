@@ -8,14 +8,8 @@ using System.Threading.Tasks;
 
 namespace webShop.core.Models
 {
-    public class Product
+    public class Product: BaseEntities
     {
-        public Product()
-        {
-            this.Id = Guid.NewGuid().ToString();
-        }
-
-        public string Id { get; set; }
         [DisplayName("Product Name")]
         public string Name { get; set; }
         public string Description { get; set; }
