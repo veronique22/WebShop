@@ -8,7 +8,7 @@ namespace WebShop.core.Interface
         void Commit();
         bool Delete(string Id);
         T FindById(string Id);
-        IQueryable<T> GetCategory();
+        IQueryable<T> Collection();
         void Insert(T t);
         void Update(T t);
     }

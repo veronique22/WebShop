@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -17,7 +18,7 @@ namespace WebShop.WebUI.Controllers
         IRepository<ProductCategory> productCategoryContext;
         ProductManagerViewModel viewModel = new ProductManagerViewModel();
 
-        public ProductManagerController(IRepository<Product> ProductContext, IRepository<ProductCategory>CategoryContext)
+        public ProductManagerController(IRepository<Product> ProductContext, IRepository<ProductCategory> CategoryContext)
         {
             context = ProductContext;
             productCategoryContext = CategoryContext;
@@ -25,7 +26,7 @@ namespace WebShop.WebUI.Controllers
 
         public ActionResult Index()
         {
-            List<Product> products = context.GetCategory().ToList();
+            List<Product> products = context.Collection().ToList();
 
             return View(products);
         }
@@ -33,28 +34,56 @@ namespace WebShop.WebUI.Controllers
         public ActionResult Create()
         {
             viewModel.Product = new Product();
-            viewModel.ProductCategories = productCategoryContext.GetCategory();
+            viewModel.ProductCategories = productCategoryContext.Collection();
             return View(viewModel);
         }
         [HttpPost]
-        public ActionResult Create(Product product)
+        public ActionResult Create(ProductManagerViewModel model, HttpPostedFileBase file)
         {
-            if (ModelState.IsValid == false)
+            if (ModelState.IsValid)
             {
-                return View(product);
+                if (file != null)
+                {
+                    model.Product.Image = model.Product.Id + Path.GetExtension(file.FileName);
+                    string path = Server.MapPath("~/Content/ProductImages/" + model.Product.Image);
+                    file.SaveAs(path);
+                }
+
+                context.Insert(model.Product);
+                context.Commit();
+                return RedirectToAction("Index");
             }
-            else
-            {
-                context.Insert(product);
-                context.Commit();  // cette methode que nous avons crée nous permet de sauver le produit dans le cache. 
-            }
-            return RedirectToAction("Index");
+
+            else return View(model);
+            //if (ModelState.IsValid == false)
+            //{
+            //    return View(product);
+            //}
+            //else
+            //{
+            //    if (file != null)
+
+            //    {
+
+            //        product.Image = product.Id + Path.GetExtension(file.FileName);
+
+            //        file.SaveAs(Server.MapPath("~/Content/ProductImages/" +  product.Image);
+
+            //    }
+            //    context.Insert(product);
+            //    context.Commit();  // cette methode que nous avons crée nous permet de sauver le produit dans le cache. 
+            //}
+            //return RedirectToAction("Index");
 
         }
         [HttpGet]
         public ActionResult Delete(string Id)
         {
             var productToDelete = context.FindById(Id);
+            if (productToDelete is null)
+            {
+                return HttpNotFound();
+            }
             return View(productToDelete);
         }
         [HttpDelete]
@@ -70,7 +99,7 @@ namespace WebShop.WebUI.Controllers
             {
                 return RedirectToAction("Index");
             }
-            
+
         }
         [HttpGet]
         public ActionResult Edit(string Id)
@@ -81,19 +110,44 @@ namespace WebShop.WebUI.Controllers
                 return HttpNotFound();
             }
             viewModel.Product = productToUpdate;
-            viewModel.ProductCategories = productCategoryContext.GetCategory();
+            viewModel.ProductCategories = productCategoryContext.Collection();
             return View(viewModel);
         }
         [HttpPost]
         [ActionName("Edit")]
 
-        public ActionResult Editnew(Product product)
+        public ActionResult Editnew(ProductManagerViewModel model, HttpPostedFileBase file)
         {
-            context.Update(product);
-            //context.Delete(product.Id);
-            //context.Insert(product);
-            context.Commit();
-            return RedirectToAction("Index"); ;
+            var editProduct = context.FindById(model.Product.Id);
+            if (ModelState.IsValid)
+
+            {
+
+                if (file != null)
+
+                {
+
+                    model.Product.Image = model.Product.Id + Path.GetExtension(file.FileName);
+
+                    string path = Server.MapPath("~/Content/ProductImages/" + model.Product.Image);
+                    file.SaveAs(path);
+
+                }
+
+                context.Update(editProduct);
+
+                //context.Delete(product.Id);     //delete old product
+
+                //context.Insert(product);        // insert new
+
+                context.Commit();
+                return RedirectToAction("Index"); ;
+
+            }
+            else
+            {
+                return View(model);
+            }
         }
     }
 }

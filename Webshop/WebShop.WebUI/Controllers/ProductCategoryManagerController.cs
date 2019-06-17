@@ -11,14 +11,14 @@ namespace WebShop.WebUI.Controllers
 {
     public class ProductCategoryManagerController : Controller
     {
-        IRepository<ProductCategory> context;
+        private IRepository<ProductCategory> context;
         public ProductCategoryManagerController(IRepository<ProductCategory>CategoryContext)
         {
             context = CategoryContext;
         }
         public ActionResult Index()
         {
-            List<ProductCategory> categories = context.GetCategory().ToList();
+            List<ProductCategory> categories = context.Collection().ToList();
 
             return View(categories);
         }

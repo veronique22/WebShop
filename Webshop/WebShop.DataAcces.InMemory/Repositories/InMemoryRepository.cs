@@ -60,7 +60,7 @@ namespace WebShop.DataAcces.InMemory.Repositories
                 throw new Exception(ClassName + " not found");
             }
         }
-        public IQueryable<T> GetCategory()
+        public IQueryable<T> Collection()
         {
             return Items.AsQueryable();
         }
