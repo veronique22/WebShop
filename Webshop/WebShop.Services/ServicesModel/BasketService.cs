@@ -84,8 +84,18 @@ namespace WebShop.Services.ServicesModel
             BasketContext.Commit();
         }
 
-        public void removeFromBasket()
+        public void removeFromBasket(HttpContextBase httpContext, string ItemId)
         {
+
+            Basket basket = GetBasket(httpContext, true);
+            BasketItem item = basket.BasketItems.FirstOrDefault(i => i.Id == ItemId);
+
+            if (item !=null)
+            {
+                basket.BasketItems.Remove(item);
+                BasketContext.Commit();
+
+            }
 
         }
     }
