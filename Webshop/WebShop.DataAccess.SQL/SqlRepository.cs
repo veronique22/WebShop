@@ -11,104 +11,63 @@ namespace WebShop.DataAccess.SQL
 {
     public class SqlRepository<T> : IRepository<T> where T : BaseEntities
     {
-        internal DataContext context;
+        internal DbContext context = new DataContext();
+        internal DbSet<T> dbset;
 
-        internal DbSet<T> dbset;                // dbset pour product and category
-
-
-
-        public SqlRepository(DataContext cont)
-
+        public SqlRepository()
         {
-
-            this.context = cont;
-
-            this.dbset = cont.Set<T>();
-
+            this.dbset = context.Set<T>();
         }
-
-
-
-
-
-        public IQueryable<T> Collection()
-
-        {
-
-            return dbset;               // renvoi le dbset de la classe concernee
-
-        }
-
-
 
         public void Commit()
-
         {
-
-            context.SaveChanges();          // save changes ares chaque manipulation
-
+            context.SaveChanges();
         }
 
-
-
-        public bool Delete(string Id)
-
+        public bool Delete(string id)
         {
+            var item = FindById(id);
 
-            var t = FindById(Id);       // search the item via id
-
-            if (context.Entry(t).State == EntityState.Detached)      // check state de la connexion
-
+            if (item is null)
             {
-
-                dbset.Attach(t);                    // attache item 
-
+                return false;
             }
 
-            context.Entry(t).State = EntityState.Deleted;        // state of the item is deleted
+            if (context.Entry(item).State == EntityState.Detached)
+            {
+                dbset.Attach(item);
+            }
 
-            dbset.Remove(t);                        // delete the item
-
+            context.Entry(item).State = EntityState.Deleted;
+            dbset.Remove(item);
             Commit();
-
             return true;
-
         }
 
+        public T FindById(string id) => dbset.FirstOrDefault(x => x.Id == id);
 
+        public IQueryable<T> Collection() => dbset;
 
-        public T FindById(string Id)
-
+        public void Insert(T item)
         {
-
-            return dbset.Find(Id);          // search an item by id
-
+            dbset.Add(item);
         }
 
-
-
-        public void Insert(T classe)
-
+        public void Update(T item)
         {
+            var itemToEdit = FindById(item.Id);
+            if (itemToEdit is null)
+            {
+                throw new Exception(item.GetType().Name + " not found");
+            }
 
-            dbset.Add(classe);          // add new item
-
+            else
+            {
+                context.Entry(item).State = EntityState.Modified;
+                itemToEdit = item;
+                Commit();
+            }
         }
-
-
-
-        public void Update(T classe)
-
-        {
-
-            dbset.Attach(classe);
-
-            context.Entry(classe).State = EntityState.Modified;         // state of item is modified (after update) 
-
-            Commit();                                                   //save changes
-
-        }
-
     }
 }
 
