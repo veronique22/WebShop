@@ -54,7 +54,11 @@ namespace WebShop.WebUI.Controllers
                 return RedirectToAction("Index");
             }
 
-            else return View(model);
+            else
+            {
+                viewModel.ProductCategories = productCategoryContext.Collection();
+                return View(model);
+            }
             //if (ModelState.IsValid == false)
             //{
             //    return View(product);
