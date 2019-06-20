@@ -26,6 +26,9 @@
                     <li>@Html.ActionLink("Product mamager", "Index", "ProductManager")</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
+                @{ 
+                    Html.RenderAction("Basketsummary", "Basket");
+                }
             </div>
         </div>
     </div>

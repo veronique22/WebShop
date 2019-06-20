@@ -5,6 +5,7 @@ using webShop.core.Models;
 using WebShop.core.Interface;
 using WebShop.DataAcces.InMemory.Repositories;
 using WebShop.DataAccess.SQL;
+using WebShop.Services.ServicesModel;
 
 namespace WebShop.WebUI
 {
@@ -47,7 +48,12 @@ namespace WebShop.WebUI
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
             //container.RegisterType<IRepository<Product>, InMemoryRepository<Product>>();
+            //container.RegisterType<IRepository<Product>, SqlRepository<Product>>();
             //container.RegisterType<IRepository<ProductCategory>, InMemoryRepository<ProductCategory>>();
+            //container.RegisterType<IRepository<ProductCategory>, SqlRepository<ProductCategory>>();
+            container.RegisterType<IRepository<Basket>, SqlRepository<Basket>>();
+            container.RegisterType<IRepository<BasketItem>, SqlRepository<BasketItem>>();
+            container.RegisterType<IBasketService, BasketService>();
             container.RegisterType(typeof(IRepository<>), typeof(SqlRepository<>));
         }
     }

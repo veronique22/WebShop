@@ -11,10 +11,10 @@ namespace webShop.core.ViewsModels
         public int BasketCount  { get; set; }
         public decimal BasktetTotal { get; set; }
 
-        public BasketSummaryViewModel(int BasketCount, decimal BasktetTotal)
+        public BasketSummaryViewModel(int basketCount, decimal basktetTotal)
         {
-            this.BasketCount = BasketCount;
-            this.BasktetTotal = BasktetTotal;
+            this.BasketCount = basketCount;
+            this.BasktetTotal = basktetTotal;
         }
     }
 }

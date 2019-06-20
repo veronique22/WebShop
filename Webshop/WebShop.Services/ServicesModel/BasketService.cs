@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +33,8 @@ namespace WebShop.Services.ServicesModel
                 string BasketId = cookie.Value;
                 if (string.IsNullOrEmpty(BasketId) == false) // donc si le string existe et que nous avons une valeur de BasketId
                 {
-                    basket = BasketContext.FindById(BasketId);
+                    //basket = BasketContext.FindById(BasketId);
+                    basket = BasketContext.Collection().Include(y => y.BasketItems).FirstOrDefault(x => x.Id == BasketId);
                 }
                 else
                 {
@@ -44,7 +46,11 @@ namespace WebShop.Services.ServicesModel
             }
             else
             {
-                basket = CreateNewBasket(httpContext);
+                if (createIfNull)
+                {
+                    basket = CreateNewBasket(httpContext);
+
+                }
             }
 
             return basket;
@@ -59,7 +65,7 @@ namespace WebShop.Services.ServicesModel
             HttpCookie cookie = new HttpCookie(BasketSessionName);
             cookie.Value = basket.Id;
             cookie.Expires = DateTime.Now.AddDays(2); // le panier sera sauvegardé pendant 2 jours et après il expirera.
-
+            httpContext.Response.Cookies.Add(cookie);
             return basket;
 
         }
@@ -132,7 +138,7 @@ namespace WebShop.Services.ServicesModel
         {
             Basket basket = GetBasket(httpContext, false);
             BasketSummaryViewModel model = new BasketSummaryViewModel(0, 0);
-            if (basket!=null)
+            if (basket != null)
             {
                 int? basketCount = (from item in basket.BasketItems
                                     select item.Quantity).Sum();
