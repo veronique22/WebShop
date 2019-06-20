@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using webShop.core.Models;
+using webShop.core.ViewsModels;
 using WebShop.core.Interface;
 
 namespace WebShop.Services.ServicesModel
 {
-    public class BasketService
+    public class BasketService : IBasketService
     {
         IRepository<Product> productContext;
         IRepository<Basket> BasketContext;
@@ -22,7 +23,7 @@ namespace WebShop.Services.ServicesModel
             BasketContext = BContext;
         }
 
-        private Basket GetBasket(HttpContextBase httpContext, bool createIfNull ) // HttpContexBase est la classe qui va sauvegarder l'ensemble des informations locales du client. 
+        private Basket GetBasket(HttpContextBase httpContext, bool createIfNull) // HttpContexBase est la classe qui va sauvegarder l'ensemble des informations locales du client. 
         {
             HttpCookie cookie = httpContext.Request.Cookies.Get(BasketSessionName); // permet de lire les cookies
             Basket basket = new Basket();
@@ -90,13 +91,68 @@ namespace WebShop.Services.ServicesModel
             Basket basket = GetBasket(httpContext, true);
             BasketItem item = basket.BasketItems.FirstOrDefault(i => i.Id == ItemId);
 
-            if (item !=null)
+            if (item != null)
             {
                 basket.BasketItems.Remove(item);
                 BasketContext.Commit();
 
             }
 
+        }
+
+
+        public List<BasketItemViewModel> GetBasketItems(HttpContextBase httpContext)
+        {
+            Basket basket = GetBasket(httpContext, false);
+
+            if (basket != null)
+            {
+                var results = (from b in basket.BasketItems
+                               join p in productContext.Collection()
+                               on b.ProductID equals p.Id
+                               select new BasketItemViewModel()
+                               {
+                                   Id = b.Id,
+                                   Quantity = b.Quantity,
+                                   ProductName = p.Name,
+                                   Image = p.Image,
+                                   Price = p.Price
+
+                               }).ToList();
+                return results;
+            }
+            else
+            {
+                return new List<BasketItemViewModel>();
+            }
+
+        }
+
+        public BasketSummaryViewModel BasketSummary(HttpContextBase httpContext)
+        {
+            Basket basket = GetBasket(httpContext, false);
+            BasketSummaryViewModel model = new BasketSummaryViewModel(0, 0);
+            if (basket!=null)
+            {
+                int? basketCount = (from item in basket.BasketItems
+                                    select item.Quantity).Sum();
+
+                decimal? BasketTotal = (from item in basket.BasketItems
+                                        join p in productContext.Collection()
+                                        on item.ProductID
+                                        equals p.Id
+                                        select item.Quantity * p.Price).Sum();
+
+                model.BasketCount = basketCount ?? 0; // ici nous disons si il a une valeur, montrer la valeur, si non 
+                                                      // afficher 0 comme valeur
+
+                return model;
+            }
+
+            else
+            {
+                return model;
+            }
         }
     }
 }
